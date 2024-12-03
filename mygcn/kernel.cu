@@ -28,7 +28,7 @@ __global__ void spmm_kernel(const float *row_ptr, const float *col_idx, const fl
 }
 
 void spmm(array1d_t<float> &input1, array1d_t<float> &input2, array1d_t<float> &input3,
-          array2d_t<float> &input4, array2d_t<float> &output)
+          array2d_t<float> &input4, array2d_t<float> &output, cudaStream_t stream)
 {
 
     int num_rows = input1.col_count - 1; // Number of rows in the sparse matrix
@@ -39,5 +39,6 @@ void spmm(array1d_t<float> &input1, array1d_t<float> &input2, array1d_t<float> &
 
     // std::cout << num_rows << " " << num_cols << std::endl;
 
-    spmm_kernel<<<blocksPerGrid, threadsPerBlock>>>(input1.data_ptr, input2.data_ptr, input3.data_ptr, input4.data_ptr, output.data_ptr, num_rows, num_cols);
+    // spmm_kernel<<<blocksPerGrid, threadsPerBlock>>>(input1.data_ptr, input2.data_ptr, input3.data_ptr, input4.data_ptr, output.data_ptr, num_rows, num_cols);
+    spmm_kernel<<<blocksPerGrid, threadsPerBlock, 0, stream>>>(input1.data_ptr, input2.data_ptr, input3.data_ptr, input4.data_ptr, output.data_ptr, num_rows, num_cols);
 }
